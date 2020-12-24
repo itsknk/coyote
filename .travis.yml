@@ -1,7 +1,19 @@
-language: go
-notificaitons:
-  email:
-    recipients: kishorekaranamknk@gmail.com
-    on_success: change
-    on_failure: always
-script: go test ./...
+language: minimal
+dist: xenial
+before_install:
+- sudo apt-get install -y build-essential git python-pip sqlite3
+- sudo apt-get install -y curl
+- curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+- sudo apt-get install -y nodejs
+- sudo pip install requests
+- sudo npm install -g gulp
+- sudo npm install -g gulp-cli
+- curl https://dl.google.com/go/go1.12.1.linux-amd64.tar.gz --output /tmp/go1.12.1.linux-amd64.tar.gz
+- sudo tar -C /usr/local -zxf /tmp/go1.12.1.linux-amd64.tar.gz
+script:
+- export GOROOT=/usr/local/go
+- export GOPATH=$HOME/go
+- export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+- go version
+- which go
+- "$TRAVIS_BUILD_DIR/build/build.py --procs=2 --release"
