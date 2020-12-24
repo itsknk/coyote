@@ -13,10 +13,10 @@ func FileDownloadTest(t *testing.T) {
 
 		t.Run("1 URL", func(t *testing.T) {
 			url := []string{
-				"http://pluspng.com/img-png/google-logo-png-open-2000.png",
+				"https://images-na.ssl-images-amazon.com/images/I/81P1kr0i2RL._RI_.jpg",
 			}
 			fileName := []string{
-				"google.png",
+				"something.png",
 			}
 			err := downloader.Coyote(url, fileName)
 
@@ -27,12 +27,12 @@ func FileDownloadTest(t *testing.T) {
 
 		t.Run("2 URLs", func(t *testing.T) {
 			url := []string{
-				"http://pluspng.com/img-png/google-logo-png-open-2000.png",
-				"https://img.icons8.com/cotton/512/000000/chrome.png",
+				"https://images-na.ssl-images-amazon.com/images/I/81P1kr0i2RL._RI_.jpg",
+				"https://www.telegraph.co.uk/content/dam/film/Entourage/entouragetv-xlarge.jpg",
 			}
 			fileName := []string{
-				"google.png",
-				"chrome.png",
+				"something.png",
+				"nothing.png",
 			}
 			err := downloader.Coyote(url, fileName)
 
@@ -43,47 +43,46 @@ func FileDownloadTest(t *testing.T) {
 
 		t.Run("Mismatch URL Array Length", func(t *testing.T) {
 			urls := []string{
-				"http://pluspng.com/img-png/google-logo-png-open-2000.png",
+				"https://www.telegraph.co.uk/content/dam/film/Entourage/entouragetv-xlarge.jpg",
 			}
 			fileNames := []string{
-				"google.png",
-				"chrome.png",
+				"something.png",
+				"nothing.png",
 			}
 			err := downloader.Coyote(urls, fileNames)
 
-			// Expecting the error not to be nil
 			if err == nil {
-				t.Error("Expected an error, the URL's length doesn't match the filename's length")
+				t.Error("Expected Error: the URL's length doesn't match the filename's length")
 			}
 		})
 
 		t.Run("Mismatch Filename Array Length", func(t *testing.T) {
 			urls := []string{
-				"http://pluspng.com/img-png/google-logo-png-open-2000.png",
-				"http://pluspng.com/img-png/google-logo-png-open-2000.png",
+				"https://images-na.ssl-images-amazon.com/images/I/81P1kr0i2RL._RI_.jpg",
+				"https://www.telegraph.co.uk/content/dam/film/Entourage/entouragetv-xlarge.jpg",
 			}
 			fileNames := []string{
-				"google.png",
+				"something.png",
 			}
 			err := downloader.Coyote(urls, fileNames)
 
 			// Expecting error here
 			if err == nil {
-				t.Error("Expected an error, the length of the URL array doesn't match the length of the filename array")
+				t.Error("Expected Error: the length of the URL array doesn't match the length of the filename array")
 			}
 		})
 
 		t.Run("URL Doesn't Exist", func(t *testing.T) {
 			url := []string{
-				"http://randomImageWebsiteOrSomething.com",
+				"http://somethingelseforthesakeoftestingthispkg.com",
 			}
 			fileName := []string{
-				"google.png",
+				"something.png",
 			}
 			err := downloader.Coyote(url, fileName)
 
 			if err == nil {
-				t.Error("Expected a non 200 status code error")
+				t.Error("Not OK")
 			}
 		})
 	})
