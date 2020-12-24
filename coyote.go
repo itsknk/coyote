@@ -1,82 +1,95 @@
 package coyote
 
 import (
-	"fmt"
 	"bytes"
 	"errors"
-	"os"
+	"fmt"
 	"io"
-	"github.com/schollz/progressbar/v3"
+	"os"
+
 	"github.com/valyala/fasthttp"
+	"github.com/schollz/progressbar/v2"
 )
 
 type Downloader struct {
 	Client fasthttp.Client
-	Debug bool
+	Debug  bool
 }
 
-func (s *Downloader) Coyote(url[]string, filename [] string) error {
-	l := len(url)
-	if l != len(filename) {
-		return errors.New("Length won't match")
+func (d *Downloader) Coyote(urls []string, fileNames []string) error {
+	if len(urls) != len(fileNames) {
+		return errors.New("The length of URLs doesn't match the length of filenames")
 	}
-	downch := make(chan []byte, l)
-	errorch := make(chan error, l)
 
-	for i, url := range url {
-		go func(url string, filename string) {
-			result, err := s.download(url, filename)
+	done := make(chan []byte, len(urls))
+	errch := make(chan error, len(urls))
+
+	for c, url := range urls {
+		go func(url string, fileName string) {
+			result, err := d.downloadFile(url, fileName)
 			if err != nil {
-				errorch <- err
-				downch <- nil
+				errch <- err
+				done <- nil
 				return
 			}
-			downch <- result
-			errorch <- err
-		}(url, filename[i])
+			done <- result
+			errch <- err
+		}(url, fileNames[c])
 	}
-	var errorString string
-	for i:=0; i<l; i++ {
-		if err := <-errorch; err != nil {
-			errorString = errorString + " " + err.Error()
+
+	var errStr string
+
+	for i := 0; i < len(urls); i++ {
+		if err := <-errch; err != nil {
+			errStr = errStr + " " + err.Error()
 		}
 	}
+
 	var err error
-	if errorString != "" {
-		err = errors.New(errorString)
+	if errStr != "" {
+		err = errors.New(errStr)
 	}
+
 	return err
 }
 
-func (s *Downloader) download(url string, filename string) ([]byte, error) {
-	if s.Debug == true {
+func (d *Downloader) downloadFile(url string, fileName string) ([]byte, error) {
+	if d.Debug == true {
 		defer func() {
-			fmt.Printf("Download Finished URL: %s, FILE: %s \n", url, filename)
+			fmt.Printf("[Download Complete]: URL: %s, File: %s \n", url, fileName)
 		}()
 	}
-	statuscode, body, err := s.Client.Get(nil, url)
+
+	statusCode, body, err := d.Client.Get(nil, url)
 	if err != nil {
 		return nil, err
 	}
-	if statuscode != 200 {
-		return nil, errors.New("Not OK")
+	if statusCode != 200 {
+		return nil, errors.New("URL did not return 200")
 	}
+
 	var out io.Writer;
-	fn, err := os.Create(filename)
+	f, err := os.Create(fileName)
 	if err != nil {
 		return nil, err
 	}
+
 	pb := progressbar.NewOptions(
 		int(len(body)),
-		progressbar.OptionSetWidth(int(len(body))),
+		progressbar.OptionSetBytes(int(len(body))),
+
 	)
-	out = io.MultiWriter(fn, pb)
+	out = io.MultiWriter(f, pb)
+
 	var data bytes.Buffer
-	rd := bytes.NewReader(body)
-	_,err = io.Copy(out, rd)
+	r := bytes.NewReader(body)
+
+	_, err = io.Copy(out, r)
 	print("\n")
-	if err != nil{
+
+	if err != nil {
 		return nil, err
 	}
+
 	return data.Bytes(), nil
 }

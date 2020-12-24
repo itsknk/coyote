@@ -3,6 +3,7 @@ module github.com/itsknk/coyote
 go 1.15
 
 require (
+	github.com/schollz/progressbar/v2 v2.15.0
 	github.com/schollz/progressbar/v3 v3.7.2
 	github.com/valyala/fasthttp v1.18.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
