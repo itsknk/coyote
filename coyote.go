@@ -10,12 +10,12 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-type downloader struct {
+type Downloader struct {
 	Client fasthttp.Client
 	Debug bool
 }
 
-func (s *downloader) Coyote(url[]string, filename [] string) error {
+func (s *Downloader) Coyote(url[]string, filename [] string) error {
 	l := len(url)
 	if l != len(filename) {
 		return errors.New("Length won't match")
@@ -48,7 +48,7 @@ func (s *downloader) Coyote(url[]string, filename [] string) error {
 	return err
 }
 
-func (s *downloader) download(url string, filename string) ([]byte, error) {
+func (s *Downloader) download(url string, filename string) ([]byte, error) {
 	if s.Debug == true {
 		defer func() {
 			fmt.Printf("Download Finished URL: %s, FILE: %s \n", url, filename)
