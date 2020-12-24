@@ -1,7 +1,12 @@
-language: go
-notificaitons:
-  email:
-    recipients: your.email@host.com
-    on_success: change
-    on_failure: always
-script: go test ./...
+language: minimal
+dist: xenial
+before_install:
+- curl https://dl.google.com/go/go1.12.1.linux-amd64.tar.gz --output /tmp/go1.12.1.linux-amd64.tar.gz
+- sudo tar -C /usr/local -zxf /tmp/go1.12.1.linux-amd64.tar.gz
+script:
+- export GOROOT=/usr/local/go
+- export GOPATH=$HOME/go
+- export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+- go version
+- which go
+- go test ./...
