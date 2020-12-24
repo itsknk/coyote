@@ -1,5 +1,6 @@
 # statusHTTP
-[![Go Reference](https://pkg.go.dev/badge/github.com/itsknk/statusHTTP.svg)](https://pkg.go.dev/github.com/itsknk/coyote)
+[![Go Reference](https://pkg.go.dev/badge/github.com/itsknk/coyote.svg)](https://pkg.go.dev/github.com/itsknk/coyote)
+[![Build Status](https://travis-ci.com/itsknk/coyote.svg?branch=master)](https://travis-ci.com/itsknk/coyote)
 
 Downloading files made easy.
 
