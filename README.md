@@ -17,7 +17,25 @@ import (
 )
 ```
 ## Usage
+```
+package main
+import (
+	"github.com/itsknk/coyote"
+)
+func main() {
+	url := []string{
+		"https://images-na.ssl-images-amazon.com/images/I/81P1kr0i2RL._RI_.jpg",
+		"https://www.telegraph.co.uk/content/dam/film/Entourage/entouragetv-xlarge.jpg",
+	}
 
+	filename := []string{
+		"entourage_one.png",
+		"entourage_two.png",
+	}
+	downloader := coyote.Downloader{}
+	downloader.Coyote(url, filename)
+}
+```
 
 ## Contributing
 - Fork it and then do the changes or else download the zip file, test to make sure nothing is going sideways.
