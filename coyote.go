@@ -54,7 +54,7 @@ func (s *downloader) download(url string, filename string) ([]byte, error) {
 			fmt.Printf("Download Finished URL: %s, FILE: %s \n", url, filename)
 		}()
 	}
-	statuscode, body, err := s.client.Get(nil, url)
+	statuscode, body, err := s.Client.Get(nil, url)
 	if err != nil {
 		return nil, err
 	}
